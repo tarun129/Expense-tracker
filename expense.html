@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EXPENSES</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+             font-family: "Roboto", serif;
+        }
+
+        h1 , h2{
+            text-align: center;
+        }
+
+        .input-section{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem;
+        }
+
+        .input-section label{
+            margin-right: 0.7rem;
+        }
+
+        .input-section input{
+            font-weight: bold;
+            margin: 10px;
+            padding: 3px;
+        }
+
+        .input-section button{
+            padding: 7px 12px;
+            background-color: rgb(7, 171, 32);
+            border: none;
+            outline: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .expense-list{
+            margin: 1.25rem;
+        }
+
+        table{
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th , td{
+            text-align: left;
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        th{
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+        tfoot td{
+            font-weight: bold;
+        }
+
+        .delete-btn{
+            padding: 7px 12px;
+            color: #fff;
+            background-color: #f44336;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Your Expenses</h1>
+    <div class="input-section">
+        <label for="category-select"></label>
+        <!-- <select id="category-select">
+            <option value="Select">Select</option>
+            <option value="Food & Beverage">Food & Beverage</option>
+            <option value="Rent">Rent</option>
+            <option value="Transport">Transport</option>
+            <option value="Relaxing">Relaxing</option>
+        </select> -->
+        <input type="text" id="category-select" placeholder="Enter your Expense">
+        <label for="amount-input">Amount:</label>
+        <input type="number" id="amount-input" min="1">
+        <label for="date-input">Date</label>
+        <input type="date" id="date-input">
+        <button id="add-btn">Add</button>
+    </div>
+
+    <div class="expense-list">
+        <h2>Expense List</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody id="expense-table-body">
+
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>Total</td>
+                    <td id="total-amount"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <script>
+        let expenses = [];
+        let totalAmount = 0;
+
+        const categorySelect = document.querySelector("#category-select");
+        const amountInput = document.querySelector("#amount-input");
+        const dateInput = document.querySelector("#date-input");
+        const addBtn = document.querySelector("#add-btn");
+        const expenseTableBody = document.querySelector("#expense-table-body");
+        const totalAmountCell = document.querySelector("#total-amount");
+
+        addBtn.addEventListener("click" , function(){
+            const category = categorySelect.value;
+            const amount = Number(amountInput.value);
+            const date = dateInput.value;
+            
+            if(category === ""){
+                alert("Please Enter Category");
+                return;
+            };
+
+            if(amount < 0 || isNaN(amount)){
+                alert("Please Enter valid Amount");
+                return;
+            };
+
+            if(date === ""){
+                alert("Please Enter Date");
+                return;
+            };
+            expenses.push({category , amount , date});
+
+    
+
+
+         totalAmount += amount;
+         totalAmountCell.textContent = totalAmount;
+        //  console.log(expenses);
+
+         const newRow = expenseTableBody.insertRow();
+
+         const categoryCell = newRow.insertCell();
+         const amountCell = newRow.insertCell();
+         const dateCell = newRow.insertCell();
+         const deleteCell = newRow.insertCell(); 
+         
+          const deleteBtn = document.createElement("button");
+          deleteBtn.textContent = "DELETE";
+          deleteBtn.classList.add("delete-btn");
+          deleteBtn.addEventListener("click" , function(){
+            expenses.splice(expenses.indexOf(expense) , 1);
+
+            totalAmount -= expense.amount;
+            totalAmountCell.textContent = totalAmount;
+            expenseTableBody.removeChild(newRow); 
+
+          });
+
+          const expense = expenses[expenses.length - 1];
+          categoryCell.textContent = expense.category;
+          amountCell.textContent = expense.amount;
+          dateCell.textContent = expense.date;
+          deleteCell.appendChild(deleteBtn);
+
+
+          categorySelect.value = ""; // Reset to default option
+  amountInput.value = "";
+  dateInput.value = "";
+            
+        });
+    </script>
+</body>
+</html>
